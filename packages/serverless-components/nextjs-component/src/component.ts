@@ -1,5 +1,5 @@
 import { Component } from "@serverless/core";
-import { readJSON, pathExists } from "fs-extra";
+import { readJSON, pathExists, readFile, writeFile } from "fs-extra";
 import { resolve, join } from "path";
 import { Builder } from "@sls-next/lambda-at-edge";
 import {
@@ -229,12 +229,14 @@ class NextjsComponent extends Component {
       bucket,
       cloudFront,
       defaultEdgeLambda,
-      apiEdgeLambda
+      apiEdgeLambda,
+      apiLambda
     ] = await Promise.all([
       this.load("@serverless/aws-s3"),
       this.load("@sls-next/aws-cloudfront"),
       this.load("@sls-next/aws-lambda", "defaultEdgeLambda"),
-      this.load("@sls-next/aws-lambda", "apiEdgeLambda")
+      this.load("@sls-next/aws-lambda", "apiEdgeLambda"),
+      this.load("@sls-next/aws-lambda", "apiLambda")
     ]);
 
     const bucketOutputs = await bucket({
@@ -333,12 +335,12 @@ class NextjsComponent extends Component {
       return inputValue[lambdaType] || defaultValue;
     };
 
-    if (false && hasAPIPages) {
+    if (hasAPIPages) {
       const apiEdgeLambdaInput: LambdaInput = {
         description: inputs.description
-          ? `${inputs.description} (API)`
+          ? `Lambda@Edge ${inputs.description} (API)`
           : "API Lambda@Edge for Next CloudFront distribution",
-        handler: "index.handler",
+        handler: "api-handler-at-edge.handler",
         code: join(nextConfigPath, API_LAMBDA_CODE_DIR),
         role: {
           service: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"],
@@ -359,6 +361,31 @@ class NextjsComponent extends Component {
           | string
           | undefined
       };
+
+
+      // Start --- Publish the Lambda (not the one @Edge)
+
+      const lambdaConfig = { ... apiEdgeLambdaInput }
+      lambdaConfig.role = { ...lambdaConfig.role }
+      lambdaConfig.role.service = ["lambda.amazonaws.com"]
+      lambdaConfig.handler = "api-handler-lambda.handler"
+      lambdaConfig.description = inputs.description
+        ? `Lambda ${inputs.description} (API)`
+        : "API Lambda for Next CloudFront distribution"
+      lambdaConfig.region = "us-east-2"
+
+      const apiLambdaOutputs = await apiLambda(lambdaConfig);
+
+      await apiLambda.publishVersion();
+
+      const handlerAtEdgeFile = join(nextConfigPath, API_LAMBDA_CODE_DIR, "api-handler-at-edge.js")
+      const handlerAtEdgeContent = await readFile(handlerAtEdgeFile, 'utf8')
+      const result = handlerAtEdgeContent.replace(/<<FunctionName>>/g, apiLambdaOutputs.name);
+      
+      await writeFile(handlerAtEdgeFile, result, 'utf8')
+
+      // End   --- 
+
 
       const apiEdgeLambdaOutputs = await apiEdgeLambda(apiEdgeLambdaInput);
 

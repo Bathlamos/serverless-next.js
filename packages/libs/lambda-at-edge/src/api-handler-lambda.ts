@@ -38,25 +38,37 @@ const router = (
   };
 };
 
-export const handler = async (
-  event: OriginRequestEvent
-): Promise<CloudFrontResultResponse | CloudFrontRequest> => {
-  const request = event.Records[0].cf.request;
-  const uri = normaliseUri(request.uri);
+export const handler = async (event: any, context: any) => {
+  try {
+    
+    const request = event.request;
+    const uri = normaliseUri(request.uri);
 
-  const pagePath = router(manifest)(uri);
+    const pagePath = router(manifest)(uri);
 
-  if (!pagePath) {
+    if (!pagePath) {
+      return {
+        status: "404"
+      };
+    }
+
+    // eslint-disable-next-line
+    const page = require(`./${pagePath}`);
+    const { req, res, responsePromise } = cloudFrontCompat(event);
+
+    page.default(req, res);
+
+    if (responsePromise) {
+      return responsePromise;
+    }
+
+  } catch (e) {
     return {
-      status: "404"
-    };
+      status: "500",
+      body: JSON.stringify({
+        "result": null,
+        "error": e
+      })
+    }
   }
-
-  // eslint-disable-next-line
-  const page = require(`./${pagePath}`);
-  const { req, res, responsePromise } = cloudFrontCompat(event.Records[0].cf);
-
-  page.default(req, res);
-
-  return responsePromise;
-};
+}

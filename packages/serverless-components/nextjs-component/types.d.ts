@@ -36,6 +36,7 @@ export type LambdaInput = {
   description: string;
   handler: string;
   code: string;
+  region?: string;
   role: Record<string, unknown>;
   memory: number;
   timeout: number;

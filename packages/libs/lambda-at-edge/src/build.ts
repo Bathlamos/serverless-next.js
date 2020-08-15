@@ -243,8 +243,12 @@ class Builder {
     return Promise.all([
       ...copyTraces,
       fse.copy(
-        require.resolve("@sls-next/lambda-at-edge/dist/api-handler.js"),
-        join(this.outputDir, API_LAMBDA_CODE_DIR, "index.js")
+        require.resolve("@sls-next/lambda-at-edge/dist/api-handler-at-edge.js"),
+        join(this.outputDir, API_LAMBDA_CODE_DIR, "api-handler-at-edge.js")
+      ),
+      fse.copy(
+        require.resolve("@sls-next/lambda-at-edge/dist/api-handler-lambda.js"),
+        join(this.outputDir, API_LAMBDA_CODE_DIR, "api-handler-lambda.js")
       ),
       fse.copy(
         require.resolve("@sls-next/next-aws-cloudfront"),
@@ -416,7 +420,7 @@ class Builder {
       Object.keys(apiBuildManifest.apis.nonDynamic).length > 0 ||
       Object.keys(apiBuildManifest.apis.dynamic).length > 0;
 
-    if (false && hasAPIPages) {
+    if (hasAPIPages) {
       await this.buildApiLambda(apiBuildManifest);
     }
   }
