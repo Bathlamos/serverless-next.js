@@ -113,6 +113,9 @@ class Builder {
   ): Promise<void>[] {
     return fileList
       .filter((file) => {
+        if (!file.includes('node_modules')) {
+          return false;
+        }
         // exclude "initial" files from lambda artefact. These are just the pages themselves
         // which are copied over separately
         return !reasons[file] || reasons[file].type !== "initial";
