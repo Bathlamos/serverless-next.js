@@ -356,7 +356,10 @@ module.exports = (page) => {
 
 | Plugin config key | Type               | Default Value | Description                                                                                                                                                                                                                   |
 | ----------------- | ------------------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| nextConfigDir     | `string`           | ./            | Path to parent directory of `next.config.js`.                                                                                                                                                                                 |
+| nextConfigDir     | `string`           | ./            | Path to parent directory of `next.config.js`.                                                                                                                                                                             
+    |
+| nextConfigFile     | `string`           | next.config.js            | Filenane of the config file for Next (or Blitz, i.e.  `blitz.config.js`).                                                                                                                                                                             
+    |
 | assetsBucketName  | `string`           | \<empty\>     | Creates an S3 bucket with the name provided. The bucket will be used for uploading next static assets.                                                                                                                        |
 | cloudFront        | `bool` \| `object` | false         | Set to `true` to create a cloud front distribution in front of your nextjs application. Also can be set to an `object` if you need to override CloudFront configuration, see [serving static assets](#serving-static-assets). |
 | routes            | `[]object`         | []            | Array of custom routes for the next pages.                                                                                                                                                                                    |

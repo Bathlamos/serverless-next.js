@@ -3,6 +3,7 @@ import { PublicDirectoryCache } from "@sls-next/s3-static-assets/src/lib/getPubl
 export type ServerlessComponentInputs = {
   build?: BuildOptions | boolean;
   nextConfigDir?: string;
+  nextConfigFile?: string;
   useServerlessTraceTarget?: boolean;
   nextStaticDir?: string;
   bucketName?: string;

@@ -38,16 +38,19 @@ const defaultBuildOptions = {
 class Builder {
   nextConfigDir: string;
   dotNextDir: string;
+  nextConfigFile: string;
   serverlessDir: string;
   outputDir: string;
   buildOptions: BuildOptions = defaultBuildOptions;
 
   constructor(
     nextConfigDir: string,
+    nextConfigFile: string,
     outputDir: string,
     buildOptions?: BuildOptions
   ) {
     this.nextConfigDir = path.resolve(nextConfigDir);
+    this.nextConfigFile = nextConfigFile
     this.dotNextDir = path.join(this.nextConfigDir, ".next");
     this.serverlessDir = path.join(this.dotNextDir, "serverless");
     this.outputDir = outputDir;
@@ -379,6 +382,7 @@ class Builder {
     const { restoreUserConfig } = await createServerlessConfig(
       cwd,
       path.join(this.nextConfigDir),
+      this.nextConfigFile,
       useServerlessTraceTarget
     );
 

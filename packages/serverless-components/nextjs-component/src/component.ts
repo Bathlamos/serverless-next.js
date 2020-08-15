@@ -157,6 +157,8 @@ class NextjsComponent extends Component {
       ? resolve(inputs.nextConfigDir)
       : process.cwd();
 
+    const nextConfigFile = inputs.nextConfigFile || 'next.config.js'
+
     const buildCwd =
       typeof inputs.build === "boolean" ||
       typeof inputs.build === "undefined" ||
@@ -178,6 +180,7 @@ class NextjsComponent extends Component {
     if (buildConfig.enabled) {
       const builder = new Builder(
         nextConfigPath,
+        nextConfigFile,
         join(nextConfigPath, ".serverless_nextjs"),
         {
           cmd: buildConfig.cmd,

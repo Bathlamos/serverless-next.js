@@ -39,14 +39,15 @@ type CreateServerlessConfigResult = {
 export default async function createServerlessConfig(
   workPath: string,
   entryPath: string,
+  nextConfigFile: string,
   useServerlessTraceTarget: boolean
 ): Promise<CreateServerlessConfigResult> {
   const target = useServerlessTraceTarget
     ? "experimental-serverless-trace"
     : "serverless";
 
-  const primaryConfigPath = path.join(entryPath, "next.config.js");
-  const secondaryConfigPath = path.join(workPath, "next.config.js");
+  const primaryConfigPath = path.join(entryPath, nextConfigFile);
+  const secondaryConfigPath = path.join(workPath, nextConfigFile);
   const backupConfigName = `next.config.original.${Date.now()}.js`;
 
   const hasPrimaryConfig = fs.existsSync(primaryConfigPath);
