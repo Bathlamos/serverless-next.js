@@ -416,7 +416,7 @@ class Builder {
       Object.keys(apiBuildManifest.apis.nonDynamic).length > 0 ||
       Object.keys(apiBuildManifest.apis.dynamic).length > 0;
 
-    if (hasAPIPages) {
+    if (false && hasAPIPages) {
       await this.buildApiLambda(apiBuildManifest);
     }
   }

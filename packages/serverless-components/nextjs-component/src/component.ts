@@ -333,7 +333,7 @@ class NextjsComponent extends Component {
       return inputValue[lambdaType] || defaultValue;
     };
 
-    if (hasAPIPages) {
+    if (false && hasAPIPages) {
       const apiEdgeLambdaInput: LambdaInput = {
         description: inputs.description
           ? `${inputs.description} (API)`
