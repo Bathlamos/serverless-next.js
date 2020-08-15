@@ -21,7 +21,7 @@ const handle = async (event: OriginRequestEvent, retryCount: number): Promise<Cl
 
     if (response.FunctionError) {
       if (retryCount < 1)
-        return handle(event, retryCount + 1)
+        return handle(event, retryCount + 1) // the first call fails after deployment, most likely because the function hasn't been provisioned yet
       return {
         status: "500",
         body: JSON.stringify(

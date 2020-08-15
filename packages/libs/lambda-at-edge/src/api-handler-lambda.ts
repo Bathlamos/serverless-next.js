@@ -3,8 +3,7 @@ import manifest from "./manifest.json";
 // @ts-ignore
 import { basePath } from "./routes-manifest.json";
 import cloudFrontCompat from "@sls-next/next-aws-cloudfront";
-import { OriginRequestApiHandlerManifest, OriginRequestEvent } from "../types";
-import { CloudFrontResultResponse, CloudFrontRequest } from "aws-lambda";
+import { OriginRequestApiHandlerManifest } from "../types";
 
 const normaliseUri = (uri: string): string => (uri === "/" ? "/index" : uri);
 
@@ -40,7 +39,7 @@ const router = (
 
 export const handler = async (event: any, context: any) => {
   try {
-    
+
     const request = event.request;
     const uri = normaliseUri(request.uri);
 
