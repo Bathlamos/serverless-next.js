@@ -336,17 +336,12 @@ class NextjsComponent extends Component {
     };
 
     if (hasAPIPages) {
-      const envVars = {...process.env}
-      delete envVars['AWS_ACCESS_KEY_ID']
-      delete envVars['AWS_SECRET_ACCESS_KEY']
-
       const apiEdgeLambdaInput: LambdaInput = {
         description: inputs.description
           ? `Lambda@Edge ${inputs.description} (API)`
           : "API Lambda@Edge for Next CloudFront distribution",
         handler: "api-handler-at-edge.handler",
         code: join(nextConfigPath, API_LAMBDA_CODE_DIR),
-        env: envVars,
         role: {
           service: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"],
           policy: {
@@ -369,7 +364,10 @@ class NextjsComponent extends Component {
 
 
       // Start --- Publish the Lambda (not the one @Edge)
-
+      const envVars = {...process.env}
+      delete envVars['AWS_ACCESS_KEY_ID']
+      delete envVars['AWS_SECRET_ACCESS_KEY']
+      
       const lambdaConfig = { ... apiEdgeLambdaInput }
       lambdaConfig.role = { ...lambdaConfig.role }
       lambdaConfig.role.service = ["lambda.amazonaws.com"]
@@ -378,6 +376,7 @@ class NextjsComponent extends Component {
         ? `Lambda ${inputs.description} (API)`
         : "API Lambda for Next CloudFront distribution"
       lambdaConfig.region = "us-east-2"
+      lambdaConfig.env = envVars
 
       const apiLambdaOutputs = await apiLambda(lambdaConfig);
 
