@@ -4,6 +4,16 @@ import manifest from "./manifest.json";
 import { basePath } from "./routes-manifest.json";
 import cloudFrontCompat from "@sls-next/next-aws-cloudfront";
 import { OriginRequestApiHandlerManifest } from "../types";
+import fs from 'fs';
+
+// TODO: remove this: Temporary fix for one (both?) of
+// https://github.com/prisma/prisma-client-js/issues/476
+// https://github.com/serverless/components/issues/687
+if (fs.existsSync('node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x')) {
+  fs.renameSync('node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x', '/tmp/query-engine-rhel-openssl-1.0.x')
+  fs.chmodSync('/tmp/query-engine-rhel-openssl-1.0.x', '+x')
+  fs.renameSync('/tmp/query-engine-rhel-openssl-1.0.x', 'node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x')
+}
 
 const normaliseUri = (uri: string): string => (uri === "/" ? "/index" : uri);
 
