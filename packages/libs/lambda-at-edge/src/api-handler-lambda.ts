@@ -12,7 +12,6 @@ import fs from 'fs';
 if (fs.existsSync('node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x')) {
   fs.copyFileSync('node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x', '/tmp/query-engine-rhel-openssl-1.0.x')
   fs.chmodSync('/tmp/query-engine-rhel-openssl-1.0.x', '755')
-  fs.copyFileSync('/tmp/query-engine-rhel-openssl-1.0.x', 'node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x')
 }
 
 const normaliseUri = (uri: string): string => (uri === "/" ? "/index" : uri);
