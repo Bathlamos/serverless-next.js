@@ -18,6 +18,7 @@ export type ServerlessComponentInputs = {
   domain?: string | string[];
   domainType?: "www" | "apex" | "both";
   cloudfront?: CloudfrontOptions;
+  runtimeEnv?: string[]
 };
 
 type CloudfrontOptions = Record<string, any>;

@@ -363,11 +363,7 @@ class NextjsComponent extends Component {
       };
 
 
-      // Start --- Publish the Lambda (not the one @Edge)
-      const envVars = {...process.env}
-      delete envVars['AWS_ACCESS_KEY_ID']
-      delete envVars['AWS_SECRET_ACCESS_KEY']
-      
+      // Start --- Publish the Lambda (not the one @Edge)      
       const lambdaConfig = { ... apiEdgeLambdaInput }
       lambdaConfig.role = { ...lambdaConfig.role }
       lambdaConfig.role.service = ["lambda.amazonaws.com"]
@@ -376,7 +372,7 @@ class NextjsComponent extends Component {
         ? `Lambda ${inputs.description} (API)`
         : "API Lambda for Next CloudFront distribution"
       lambdaConfig.region = "us-east-2"
-      lambdaConfig.env = envVars
+      lambdaConfig.env = (inputs.runtimeEnv || []).map(e => process.env[e])
 
       const apiLambdaOutputs = await apiLambda(lambdaConfig);
 
