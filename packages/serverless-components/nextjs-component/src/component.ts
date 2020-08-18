@@ -364,8 +364,8 @@ class NextjsComponent extends Component {
 
 
       // Start --- Publish the Lambda (not the one @Edge)
-      const env = {}
-      ;(inputs.runtimeEnv || []).forEach(e => env[e] = process.env[e])
+      const env: any = {}
+      ;(inputs.runtimeEnv || []).forEach(e => env[e] = process.env[e] || '')
 
       const lambdaConfig = { ... apiEdgeLambdaInput }
       lambdaConfig.role = { ...lambdaConfig.role }

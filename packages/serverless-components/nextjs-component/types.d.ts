@@ -37,7 +37,7 @@ export type LambdaInput = {
   description: string;
   handler: string;
   code: string;
-  env?: object;
+  env?: any;
   region?: string;
   role: Record<string, unknown>;
   memory: number;
