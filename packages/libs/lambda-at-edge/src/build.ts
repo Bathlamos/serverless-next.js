@@ -268,7 +268,7 @@ class Builder {
       ),
       fse.copy(
         join(this.dotNextDir, "__db.js"),
-        join(this.outputDir, API_LAMBDA_CODE_DIR, "__db.js")
+        join(this.outputDir, API_LAMBDA_CODE_DIR, ".next/__db.js")
       ),
       fse.copy(
         join(this.dotNextDir, "routes-manifest.json"),
